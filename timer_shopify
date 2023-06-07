@@ -1,5 +1,84 @@
 {{ 'countdown.css' | asset_url | stylesheet_tag }}
+//css style
+.countdown-timer__container {
+    max-width: 1200px;
+    padding: 0 18px;
+    margin: 0 auto;
+}
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: space-between;
+    align-items: center;
+    align-self: center;
+}
+.countdown__title {
+}
+.countdown__timer-title{
+    display: flex;
+    flex-direction: column;
+}
+.timer {
+    border: 2px solid pink;
+    border-radius: 10px;
+    margin: 10px 0;
+    text-align: center;
+}
+.countdown__num {
+    display: inline-block;
+    font-size: 1em;
+    padding: 0.5em;
+    text-transform: uppercase;
+    font-weight: bold;
 
+}
+.countdown__text {
+    margin-right: 5px;
+}
+ul{
+    padding: 0;
+}
+.link__button{
+    margin-top: -20px;
+    text-transform: uppercase;
+    max-width: auto;
+    
+} 
+a{
+    text-decoration: none;
+    color: rgb(61, 61, 61);
+}
+.link__button:hover{
+    
+    color: white;
+
+}
+@media (max-width: 750px) {
+    .container{
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+    .timer{
+        margin: 0;
+    }
+    .countdown__num {
+        display: grid;
+        grid-template-columns: 1fr;
+        font-size: 1em;
+    }
+    .countdown__ul{
+       display: inline-flex;
+
+    }
+    .countdown__timer-title{
+        text-align: center;
+    }
+    .link__button{
+        margin: 0 auto;
+        margin-top: -20px;
+    }
+}
+//end css style
 {% if section.settings.enable_countdown %}
 <div class="countdown-timer__container color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} header-wrapper--border-bottom{% endif %}">
     <div class="container">
