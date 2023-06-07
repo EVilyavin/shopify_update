@@ -1,0 +1,152 @@
+{{ 'countdown.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.enable_countdown %}
+<div class="countdown-timer__container color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} header-wrapper--border-bottom{% endif %}">
+    <div class="container">
+    <div class="countdown__timer-title">
+        <h2 id="headline" class="countdown__title">До конца акции осталось:</h2>
+        <a href="{{ section.settings.button_url }}" class="countdown__title link__button">{{ section.settings.button_label }}</a>
+    </div>
+  <div id="countdown" class="timer">
+    <ul class="countdown__ul">
+      <li class="countdown__num"><span class="countdown__text" id="days"></span>Дней</li>
+      <li class="countdown__num"><span class="countdown__text" id="hours"></span>Часов</li>
+      <li class="countdown__num"><span class="countdown__text" id="minutes"></span>Минут</li>
+      <li class="countdown__num"><span class="countdown__text" id="seconds"></span>Секунд</li>
+    </ul>
+  </div>
+</div>
+</div>
+{% endif %}
+
+
+<script>
+    const deadline = '{{ section.settings.timer_date }}';
+
+function getTimeRemaining(endtime) {
+    let days, hours, minutes, seconds;
+    const t = Date.parse(endtime) - Date.parse(new Date());
+
+    if (t <= 0) {
+        days = 0;
+        hours = 0;
+        minutes = 0;
+        seconds = 0;
+    }else{
+        days = Math.floor( (t/(1000*60*60*24)) ),
+        seconds = Math.floor( (t/1000) % 60 ),
+        minutes = Math.floor( (t/1000/60) % 60 ),
+        hours = Math.floor( (t/(1000*60*60) % 24) );
+    }
+
+
+    return {
+        'total': t,
+        'days': days,
+        'hours': hours,
+        'minutes': minutes,
+        'seconds': seconds
+    };
+}
+
+function getZero(num){
+    if (num >= 0 && num < 10) { 
+        return '0' + num;
+    } else {
+        return num;
+    }
+}
+
+function setClock(selector, endtime) {
+
+    const timer = document.querySelector(selector),
+        days = timer.querySelector("#days"),
+        hours = timer.querySelector('#hours'),
+        minutes = timer.querySelector('#minutes'),
+        seconds = timer.querySelector('#seconds'),
+        timeInterval = setInterval(updateClock, 1000);
+
+    updateClock();
+
+    function updateClock() {
+        const t = getTimeRemaining(endtime);
+
+        days.innerHTML = getZero(t.days);
+        hours.innerHTML = getZero(t.hours);
+        minutes.innerHTML = getZero(t.minutes);
+        seconds.innerHTML = getZero(t.seconds);
+
+        if (t.total <= 0) {
+            clearInterval(timeInterval);
+        }
+    }
+}
+
+setClock('.timer', deadline);
+</script>
+
+{% schema %}
+    {
+        "name": "Countdown Bar",
+        "settings": [
+            {
+                "type": "checkbox",
+                "id": "enable_countdown",
+                "default": false,
+                "label": "Countdown Bar"
+            },
+            {
+                "type": "select",
+                "id": "color_scheme",
+                "options": [
+                    {
+                    "value": "accent-1",
+                    "label": "t:sections.all.colors.accent_1.label"
+                    },
+                    {
+                    "value": "accent-2",
+                    "label": "t:sections.all.colors.accent_2.label"
+                    },
+                    {
+                    "value": "background-1",
+                    "label": "t:sections.all.colors.background_1.label"
+                    },
+                    {
+                    "value": "background-2",
+                    "label": "t:sections.all.colors.background_2.label"
+                    },
+                    {
+                    "value": "inverse",
+                    "label": "t:sections.all.colors.inverse.label"
+                    }
+                ],
+                "default": "background-1",
+                "label": "t:sections.all.colors.label"
+            },
+            {
+                "type": "text",
+                "id": "button_label",
+                "label": "Button label",
+                "default": "🎀 ПРИНЯТЬ УЧАСТИЕ В АКЦИИ"
+            },
+            {
+                "type": "url",
+                "id": "button_url",
+                "label": "Button link"
+            },
+            {
+                "type": "text",
+                "id": "timer_date",
+                "label": "Timer Date",
+                "default": "2023-06-12",
+                "info": "Подставьте значение даты в формате 2023-06-12"
+            }
+        ],
+        "presets": [
+            {
+                "name": "Countdown Bar"
+            }
+        ]
+    }
+{% endschema %}
+
